@@ -1,0 +1,62 @@
+  {
+  "Generative AI": {
+    "explicit_count": 2,
+    "implicit_count": 6
+  },
+  "Prompt": {
+    "explicit_count": 2,
+    "implicit_count": 2
+  },
+  "Model": {
+    "explicit_count": 1,
+    "implicit_count": 7
+  },
+  "LLM": {
+    "explicit_count": 1,
+    "implicit_count": 2
+  },
+  "API": {
+    "explicit_count": 1,
+    "implicit_count": 0
+  },
+  "Fine-tuning": {
+    "explicit_count": 2,
+    "implicit_count": 0
+  },
+  "Inference": {
+    "explicit_count": 3,
+    "implicit_count": 0
+  },
+  "Token": {
+    "explicit_count": 0,
+    "implicit_count": 0
+  },
+  "Context window": {
+    "explicit_count": 1,
+    "implicit_count": 1
+  },
+  "Use-case": {
+    "explicit_count": 3,
+    "implicit_count": 0
+  },
+  "Prompt Engineering": {
+    "explicit_count": 1,
+    "implicit_count": 3
+  },
+  "Pipeline": {
+    "explicit_count": 0,
+    "implicit_count": 1
+  },
+  "Embedding": {
+    "explicit_count": 2,
+    "implicit_count": 1
+  },
+  "Vector search": {
+    "explicit_count": 2,
+    "implicit_count": 0
+  },
+  "RAG": {
+    "explicit_count": 1,
+    "implicit_count": 0
+  }
+}
