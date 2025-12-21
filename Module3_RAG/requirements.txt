@@ -1,8 +1,9 @@
 langchain==0.2.16
-langchain-community==0.2.16
-langchain-text-splitters==0.2.4
+langchain-community>=0.3.27
+langchain-text-splitters>=0.3.9
 faiss-cpu
 langchain-openai
 gradio>=4.0.0
 python-dotenv>=1.0.0
 tiktoken>=0.7.0
+sentence-transformers>=2.2.0
