@@ -5,11 +5,15 @@
 This project is a **Python-based Streamlit application** that answers user questions about ** weather conditions** and **news** using an **agent orchestration architecture** and **Model Context Protocol (MCP)–style server integrations**.
 
 The system supports **natural language queries**, **multi-turn conversations**, and **combined requests** such as asking for weather and news in a single query.
+
+**VIDEO LINK**: https://youtu.be/VzXr-b25MbY?si=io32pM20BjrvNMQ0
+---
 ---
 <video controls width="100%">
-  <source src="video.mp4" type="video/webm">
-  Your browser does not support the video tag.
+  <source src="https://youtu.be/VzXr-b25MbY?si=io32pM20BjrvNMQ0" type="video/webm">
 </video>
+---
+
 
 ---
 
