@@ -8,7 +8,6 @@ The system supports **natural language queries**, **multi-turn conversations**, 
 
 **VIDEO LINK**: https://youtu.be/VzXr-b25MbY?si=io32pM20BjrvNMQ0
 
-
 **Git**: https://github.com/aska-courses/generative-ai-for-software-development/tree/main/Module5_Agent_MCP
 ---
 
