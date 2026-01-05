@@ -7,3 +7,14 @@ __pycache__/
 *.ckpt
 .vscode/
 .idea/
+
+
+.env
+
+# project folders
+project/
+project_works/
+
+# python cache
+__pycache__/
+*.pyc

@@ -1,0 +1,25 @@
+{
+  "servers": {
+    "weather": {
+      "name": "Open-Meteo Weather",
+      "type": "http",
+      "endpoint": "https://api.open-meteo.com/v1/forecast",
+      "geocoding_endpoint": "https://geocoding-api.open-meteo.com/v1/search",
+      "requires_auth": false,
+      "description": "Free weather data API"
+    },
+    "news": {
+      "name": "TheNews API",
+      "type": "http",
+      "endpoint": "https://api.thenewsapi.com/v1/news",
+      "requires_auth": true,
+      "auth_env_var": "THENEWSAPI_KEY",
+      "description": "News aggregation API"
+    }
+  },
+  "settings": {
+    "cache_ttl": 300,
+    "timeout": 10,
+    "retry_attempts": 3
+  }
+}
