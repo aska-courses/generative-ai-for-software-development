@@ -7,7 +7,7 @@ This project is a **Python-based Streamlit application** that answers user quest
 The system supports **natural language queries**, **multi-turn conversations**, and **combined requests** such as asking for weather and news in a single query.
 ---
 <video controls width="100%">
-  <source src="video.MOV" type="video/webm">
+  <source src="video.mp4" type="video/webm">
   Your browser does not support the video tag.
 </video>
 
