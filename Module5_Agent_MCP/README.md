@@ -10,7 +10,7 @@ The system supports **natural language queries**, **multi-turn conversations**, 
 ---
 ---
 <video controls width="100%">
-  <source src="https://youtu.be/VzXr-b25MbY?si=io32pM20BjrvNMQ0" type="video/webm">
+  <source src="video.mp4" type="video/webm">
 </video>
 ---
 
