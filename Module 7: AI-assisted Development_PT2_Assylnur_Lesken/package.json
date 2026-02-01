@@ -1,0 +1,62 @@
+{
+  "name": "data-validation-module",
+  "version": "1.0.0",
+  "description": "Production-ready data validation module for email, password, and phone number validation",
+  "main": "src/validation.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/**/*.js tests/**/*.js"
+  },
+  "keywords": [
+    "validation",
+    "email",
+    "password",
+    "phone",
+    "input-validation",
+    "data-validation",
+    "security",
+    "node.js"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/server.js"
+    ],
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
+      }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/data-validation-module.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/data-validation-module/issues"
+  },
+  "homepage": "https://github.com/yourusername/data-validation-module#readme"
+}

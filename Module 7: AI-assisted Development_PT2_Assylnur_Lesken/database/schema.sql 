@@ -1,0 +1,171 @@
+-- =====================================================
+-- Data Validation Module - Database Schema
+-- =====================================================
+-- Purpose: Store validation rules for dynamic rule management
+-- Database: PostgreSQL (compatible with MySQL with minor adjustments)
+-- Version: 1.0
+-- =====================================================
+
+-- Drop existing tables if they exist (for development/testing)
+DROP TABLE IF EXISTS validation_logs CASCADE;
+DROP TABLE IF EXISTS validation_rules CASCADE;
+
+-- =====================================================
+-- Table: validation_rules
+-- Description: Stores all validation rules for email, password, and phone
+-- =====================================================
+CREATE TABLE validation_rules (
+    id SERIAL PRIMARY KEY,
+    rule_name VARCHAR(100) NOT NULL UNIQUE,
+    field_type VARCHAR(50) NOT NULL,
+    regex_pattern TEXT,
+    error_message TEXT NOT NULL,
+    error_code VARCHAR(20) NOT NULL,
+    priority VARCHAR(20) DEFAULT 'medium',
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT check_field_type CHECK (field_type IN ('email', 'password', 'phone', 'general')),
+    CONSTRAINT check_priority CHECK (priority IN ('critical', 'high', 'medium', 'low'))
+);
+
+-- Create index for faster queries
+CREATE INDEX idx_validation_rules_field_type ON validation_rules(field_type);
+CREATE INDEX idx_validation_rules_active ON validation_rules(is_active);
+
+-- =====================================================
+-- Table: validation_logs (Optional - for analytics)
+-- Description: Track validation attempts for monitoring
+-- =====================================================
+CREATE TABLE validation_logs (
+    id SERIAL PRIMARY KEY,
+    field_type VARCHAR(50) NOT NULL,
+    is_valid BOOLEAN NOT NULL,
+    error_count INTEGER DEFAULT 0,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create index for analytics queries
+CREATE INDEX idx_validation_logs_created_at ON validation_logs(created_at);
+CREATE INDEX idx_validation_logs_field_type ON validation_logs(field_type);
+
+-- =====================================================
+-- Seed Data: Insert validation rules
+-- =====================================================
+
+-- Email validation rules
+INSERT INTO validation_rules (rule_name, field_type, regex_pattern, error_message, error_code, priority) VALUES
+('email_required', 'email', NULL, 'Email is required', 'VAL_004', 'critical'),
+('email_format', 'email', '^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$', 'Invalid email format. Must be in format: user@domain.com', 'VAL_001', 'high'),
+('email_length', 'email', NULL, 'Email must be between 5 and 254 characters', 'VAL_005', 'medium');
+
+-- Password validation rules
+INSERT INTO validation_rules (rule_name, field_type, regex_pattern, error_message, error_code, priority) VALUES
+('password_required', 'password', NULL, 'Password is required', 'VAL_004', 'critical'),
+('password_length', 'password', NULL, 'Password must be between 8 and 128 characters', 'VAL_005', 'critical'),
+('password_uppercase', 'password', '[A-Z]', 'Password must contain at least one uppercase letter', 'VAL_002', 'high'),
+('password_lowercase', 'password', '[a-z]', 'Password must contain at least one lowercase letter', 'VAL_002', 'high'),
+('password_number', 'password', '[0-9]', 'Password must contain at least one number', 'VAL_002', 'high'),
+('password_special', 'password', '[!@#$%^&*()_+\\-=\\[\\]{}|;:,.<>?]', 'Password must contain at least one special character (!@#$%^&*...)', 'VAL_002', 'high');
+
+-- Phone validation rules
+INSERT INTO validation_rules (rule_name, field_type, regex_pattern, error_message, error_code, priority) VALUES
+('phone_required', 'phone', NULL, 'Phone number is required', 'VAL_004', 'critical'),
+('phone_format', 'phone', '^\\+?[1-9]\\d{6,14}$', 'Invalid phone number. Use format: +1234567890 or (123) 456-7890', 'VAL_003', 'high'),
+('phone_length', 'phone', NULL, 'Phone number must contain 7-15 digits', 'VAL_005', 'medium');
+
+-- =====================================================
+-- Trigger: Update timestamp on rule modification
+-- =====================================================
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_validation_rules_updated_at
+    BEFORE UPDATE ON validation_rules
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- =====================================================
+-- Views: Useful queries for rule management
+-- =====================================================
+
+-- View: Active rules by field type
+CREATE VIEW active_rules_by_field AS
+SELECT 
+    field_type,
+    COUNT(*) as rule_count,
+    STRING_AGG(rule_name, ', ' ORDER BY priority DESC) as rules
+FROM validation_rules
+WHERE is_active = TRUE
+GROUP BY field_type;
+
+-- =====================================================
+-- Functions: Database helper functions
+-- =====================================================
+
+-- Function: Get all active rules for a specific field type
+CREATE OR REPLACE FUNCTION get_rules_by_field(p_field_type VARCHAR)
+RETURNS TABLE (
+    rule_name VARCHAR,
+    regex_pattern TEXT,
+    error_message TEXT,
+    error_code VARCHAR,
+    priority VARCHAR
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        vr.rule_name,
+        vr.regex_pattern,
+        vr.error_message,
+        vr.error_code,
+        vr.priority
+    FROM validation_rules vr
+    WHERE vr.field_type = p_field_type
+    AND vr.is_active = TRUE
+    ORDER BY 
+        CASE vr.priority
+            WHEN 'critical' THEN 1
+            WHEN 'high' THEN 2
+            WHEN 'medium' THEN 3
+            WHEN 'low' THEN 4
+        END;
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- Sample Queries
+-- =====================================================
+
+-- Query 1: Get all active email rules
+-- SELECT * FROM get_rules_by_field('email');
+
+-- Query 2: Get validation statistics
+-- SELECT 
+--     field_type,
+--     COUNT(*) as total_validations,
+--     SUM(CASE WHEN is_valid THEN 1 ELSE 0 END) as successful,
+--     SUM(CASE WHEN NOT is_valid THEN 1 ELSE 0 END) as failed
+-- FROM validation_logs
+-- WHERE created_at >= CURRENT_DATE - INTERVAL '7 days'
+-- GROUP BY field_type;
+
+-- Query 3: Get all rules with their details
+-- SELECT * FROM validation_rules ORDER BY field_type, priority DESC;
+
+-- =====================================================
+-- Security Notes
+-- =====================================================
+-- 1. Always use parameterized queries to prevent SQL injection
+-- 2. Implement proper access controls on this table
+-- 3. Regular backup of validation rules
+-- 4. Monitor validation_logs for suspicious patterns
+-- 5. Use prepared statements in application code
+-- =====================================================
