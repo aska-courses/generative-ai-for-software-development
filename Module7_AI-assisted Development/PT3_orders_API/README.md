@@ -1,8 +1,12 @@
 # Orders Management API
 
+---
+
 A RESTful Orders Management API built with **FastAPI** and **SQLAlchemy**, featuring
 pagination, filtering, automated tests, and database seeding.  
 This project demonstrates **AI-assisted development using GitHub Copilot**.
+
+---
 AFTER UPDATE: ~115 new lines (except test cases)
 ---
 
