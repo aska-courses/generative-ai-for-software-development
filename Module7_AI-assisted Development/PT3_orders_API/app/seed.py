@@ -4,7 +4,7 @@ from faker import Faker
 from sqlalchemy.orm import Session
 from .database import SessionLocal, create_tables
 from . import models    
-
+import sys
 fake = Faker()
 
 def seed_database(db: Session, num_orders: int):

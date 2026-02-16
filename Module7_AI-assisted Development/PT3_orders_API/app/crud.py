@@ -35,4 +35,14 @@ def get_orders(
         query = query.filter(models.Order.created_at >= start_date)
     if end_date:
         query = query.filter(models.Order.created_at <= end_date)
-    return query.offset((page - 1) * limit).limit(limit).all() 
+    if min_amount and max_amount and min_amount > max_amount:
+        raise HTTPException(status_code=400, detail="min_amount cannot be greater than max_amount") # type: ignore
+    if start_date and end_date and start_date > end_date:
+        raise HTTPException(status_code=400, detail="start_date cannot be greater than end_date") # type: ignore
+
+    total = query.count()
+    orders = query.order_by(
+        models.Order.created_at.desc(), 
+        models.Order.id.desc()
+    ).offset((page - 1) * limit).limit(limit).all()
+    return orders, total

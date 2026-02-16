@@ -12,3 +12,5 @@ class Order(Base):
     status = Column(String, index=True, nullable=False, default="pending")
     amount = Column(Float, nullable=False, default=0.0)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    def __repr__(self):
+        return f"<Order(id={self.id}, customer={self.customer_name}, status={self.status})>"
