@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.epam.solutionshub'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Cucumber core
+    testImplementation 'io.cucumber:cucumber-java:7.15.0'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.15.0'
+
+    // JUnit 5
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.1'
+    testImplementation 'org.junit.platform:junit-platform-suite:1.10.1'
+    testRuntimeOnly  'org.junit.jupiter:junit-jupiter-engine:5.10.1'
+
+    // Selenium WebDriver (for UI step definitions)
+    testImplementation 'org.seleniumhq.selenium:selenium-java:4.16.1'
+    testImplementation 'io.github.bonigarcia:webdrivermanager:5.6.3'
+
+    // AssertJ for fluent assertions
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+
+    // Logging
+    testImplementation 'org.slf4j:slf4j-simple:2.0.9'
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty 'cucumber.junit-platform.naming-strategy', 'long'
+}
+
+// Dedicated task to run BDD tests with Cucumber report
+task cucumber(type: Test) {
+    useJUnitPlatform()
+    include '**/*Runner*'
+    systemProperty 'cucumber.junit-platform.naming-strategy', 'long'
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        showStandardStreams = false
+    }
+}
